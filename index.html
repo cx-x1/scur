@@ -242,30 +242,6 @@
             background-color: #c05621;
         }
 
-        /* نافذة النجاح */
-        .success-modal {
-            border-top: 6px solid #38a169;
-        }
-
-        .success-icon {
-            font-size: 50px;
-            color: #38a169;
-            margin-bottom: 15px;
-        }
-
-        .success-modal h3 {
-            color: #2f855a;
-        }
-
-        .btn-success {
-            background-color: #38a169;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #2f855a;
-        }
-
         .modal-content h3 {
             font-size: 22px;
             margin-bottom: 12px;
@@ -376,20 +352,6 @@
                 يرجى التحقق من بيانات البطاقة أو المحاولة لاحقاً.
             </p>
             <button class="modal-btn btn-failed" onclick="closeModals()">حسناً، فهمت</button>
-        </div>
-    </div>
-
-    <!-- 3. تمت العملية (يمكن استخدامها لاحقاً إن أردت) -->
-    <div class="modal-overlay" id="successModal">
-        <div class="modal-content success-modal">
-            <div class="success-icon">✅</div>
-            <h3>تم إكمال العملية</h3>
-            <p>
-                لقد تم استلام بياناتك ومعالجتها بنجاح.
-                <br>
-                شكراً لاستخدامك بوابة الدفع الخاصة بنا.
-            </p>
-            <button class="modal-btn btn-success" onclick="closeModals()">حسناً، إغلاق</button>
         </div>
     </div>
 
@@ -530,7 +492,6 @@
 
         function closeModals() {
             document.getElementById('failedModal').classList.remove('show');
-            document.getElementById('successModal').classList.remove('show');
             document.getElementById('warningModal').classList.remove('show');
             document.getElementById('cardName').value = '';
             document.getElementById('cardNumber').value = '';
