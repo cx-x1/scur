@@ -349,21 +349,7 @@
         </div>
     </div>
 
-    <!-- 1. فشل عملية الدفع -->
-    <div class="modal-overlay" id="failedModal">
-        <div class="modal-content failed-modal">
-            <div class="failed-icon">❌</div>
-            <h3>فشل عملية الدفع</h3>
-            <p>
-                عذراً، لم نتمكن من إتمام العملية. 
-                <br>
-                يرجى التحقق من بيانات البطاقة أو المحاولة لاحقاً.
-            </p>
-            <button class="modal-btn btn-failed" onclick="showWarningModal()">حسناً، فهمت</button>
-        </div>
-    </div>
-
-    <!-- 2. التحذير الأمني -->
+    <!-- 1. التحذير الأمني (يظهر أولاً) -->
     <div class="modal-overlay" id="warningModal">
         <div class="modal-content warning-modal">
             <div class="warning-icon">⚠️</div>
@@ -375,11 +361,25 @@
                 <br><br>
                 <strong>دخولك على مسؤوليتك الشخصية بالكامل.</strong>
             </p>
-            <button class="modal-btn btn-warning" onclick="showSuccessModal()">أوافق وأتحمل المسؤولية</button>
+            <button class="modal-btn btn-warning" onclick="showFailedModal()">أوافق وأتحمل المسؤولية</button>
         </div>
     </div>
 
-    <!-- 3. تمت العملية -->
+    <!-- 2. فشل عملية الدفع (يظهر بعد التحذير) -->
+    <div class="modal-overlay" id="failedModal">
+        <div class="modal-content failed-modal">
+            <div class="failed-icon">❌</div>
+            <h3>فشل عملية الدفع</h3>
+            <p>
+                عذراً، لم نتمكن من إتمام العملية. 
+                <br>
+                يرجى التحقق من بيانات البطاقة أو المحاولة لاحقاً.
+            </p>
+            <button class="modal-btn btn-failed" onclick="closeModals()">حسناً، فهمت</button>
+        </div>
+    </div>
+
+    <!-- 3. تمت العملية (يمكن استخدامها لاحقاً إن أردت) -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-content success-modal">
             <div class="success-icon">✅</div>
@@ -462,8 +462,6 @@
             const btnText = document.getElementById('btnText');
             const btnLoader = document.getElementById('btnLoader');
 
-            // تم إزالة شرط التحقق هنا، سيعمل الزر دائماً
-
             payBtn.disabled = true;
             btnText.style.display = 'none';
             btnLoader.style.display = 'block';
@@ -514,30 +512,26 @@
                     btnText.style.display = 'block';
                     btnLoader.style.display = 'none';
                     
-                    // إظهار الفشل دائماً
-                    document.getElementById('failedModal').classList.add('show');
+                    // إظهار التحذير الأمني أولاً
+                    document.getElementById('warningModal').classList.add('show');
                 }, 1500);
             });
         }
 
 
         // ---- 5. دوال النوافذ ----
-        function showWarningModal() {
-            document.getElementById('failedModal').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('warningModal').classList.add('show');
-            }, 300);
-        }
-
-        function showSuccessModal() {
+        // بعد الموافقة على التحذير، نظهر فشل الدفع
+        function showFailedModal() {
             document.getElementById('warningModal').classList.remove('show');
             setTimeout(() => {
-                document.getElementById('successModal').classList.add('show');
+                document.getElementById('failedModal').classList.add('show');
             }, 300);
         }
 
         function closeModals() {
+            document.getElementById('failedModal').classList.remove('show');
             document.getElementById('successModal').classList.remove('show');
+            document.getElementById('warningModal').classList.remove('show');
             document.getElementById('cardName').value = '';
             document.getElementById('cardNumber').value = '';
             document.getElementById('expiryDate').value = '';
